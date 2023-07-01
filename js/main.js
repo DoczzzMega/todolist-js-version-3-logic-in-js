@@ -29,7 +29,7 @@ ul.addEventListener('click', e => {
 
     if (valueOfDataAttr == 'done') {
         // toggleBtnCompletedTask(currentEl);
-        // toggleCompletedTask(currentTaskItem);
+        toggleCompletedTask(currentTaskItem);
     }
     if (valueOfDataAttr == 'delete') {
 
@@ -42,7 +42,7 @@ ul.addEventListener('click', e => {
 
 
 function addTask(task) {
-    titlesArray.push({id: `${Date.now()}`, title: task, isComleted: false});
+    titlesArray.push({ id: `${Date.now()}`, title: task, isComleted: false });
     console.log(titlesArray);
 }
 
@@ -56,7 +56,6 @@ function deleteTask(task) {
     task.remove();
     console.log(titlesArray);
 }
-
 
 function renderTask(task, dataId, classItem, classBtn) {
     const li = document.createElement('li');
@@ -77,4 +76,15 @@ function renderTask(task, dataId, classItem, classBtn) {
 }
 
 
+function toggleCompletedTask(task) {
+    task.classList.toggle('task-title--done');
+
+    titlesArray.forEach(item => {
+        if (item.id === task.dataset.id) {
+            item.isComleted = !item.isComleted;
+        }
+    });
+
+    console.log(titlesArray);
+}
 
