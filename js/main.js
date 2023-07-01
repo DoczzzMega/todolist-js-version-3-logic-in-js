@@ -33,7 +33,7 @@ ul.addEventListener('click', e => {
     }
     if (valueOfDataAttr == 'delete') {
 
-        //deleteTask(currentTaskItem);
+        deleteTask(currentTaskItem);
     }
     //sendTaskToStorage();
 });
@@ -45,6 +45,18 @@ function addTask(task) {
     titlesArray.push({id: `${Date.now()}`, title: task, isComleted: false});
     console.log(titlesArray);
 }
+
+function deleteTask(task) {
+    // let currentObj = titlesArray.find(item => item.id === currentEl.dataset.id);
+    titlesArray.forEach((item, index) => {
+        if (item.id === task.dataset.id) {
+            titlesArray.splice(index, 1);
+        }
+    });
+    task.remove();
+    console.log(titlesArray);
+}
+
 
 function renderTask(task, dataId, classItem, classBtn) {
     const li = document.createElement('li');
