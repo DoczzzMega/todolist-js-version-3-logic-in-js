@@ -15,7 +15,9 @@ const titlesArray = [];
 form.addEventListener('submit', e => {
     e.preventDefault();
     addTask(input.value);
-    titlesArray.forEach(item => renderTasks(item.title, item.id));
+
+    let lastObj = titlesArray[titlesArray.length - 1];
+    renderTask(lastObj.title, lastObj.id)
     input.value = '';
 });
 
@@ -44,7 +46,7 @@ function addTask(task) {
     console.log(titlesArray);
 }
 
-function renderTasks(task, dataId, classItem, classBtn) {
+function renderTask(task, dataId, classItem, classBtn) {
     const li = document.createElement('li');
     li.dataset.id = dataId;
     li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'task-item', `${classItem}`);
