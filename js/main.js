@@ -9,52 +9,53 @@ const input = document.querySelector('#taskInput');
 const ul = document.querySelector('#tasksList');
 const btnAllremove = document.querySelector('#removeDoneTasks');
 
-let isDone = false;
-const titlesArray = [];
+let titlesArray = [];
 
 form.addEventListener('submit', e => {
     e.preventDefault();
     addTask(input.value);
 
-    let lastObj = titlesArray[titlesArray.length - 1];
-    renderTask(lastObj.title, lastObj.id)
+    const lastAddedTask = titlesArray[titlesArray.length - 1];
+    renderTask(lastAddedTask.title, lastAddedTask.id)
     input.value = '';
 });
 
 ul.addEventListener('click', e => {
-    let currentEl = e.target;
-    let currentTaskItem = currentEl.closest('.task-item');
-    let valueOfDataAttr = currentEl.getAttribute('data-action');
+    const currentEl = e.target;
+    const currentTaskItem = currentEl.closest('.task-item');
+    const valueOfDataAttr = currentEl.getAttribute('data-action');
 
 
     if (valueOfDataAttr == 'done') {
-        // toggleBtnCompletedTask(currentEl);
+        toggleBtnCompletedTask(currentEl);
         toggleCompletedTask(currentTaskItem);
     }
     if (valueOfDataAttr == 'delete') {
 
         deleteTask(currentTaskItem);
     }
-    //sendTaskToStorage();
 });
 
-//btnAllremove.addEventListener('click', deleteAllCompletedTasks);
+btnAllremove.addEventListener('click', deleteAllCompletedTasks);
 
 
 function addTask(task) {
-    titlesArray.push({ id: `${Date.now()}`, title: task, isComleted: false });
+    titlesArray.push({ id: `${Date.now()}`, title: task, isCompleted: false });
     console.log(titlesArray);
+    sendTaskToStorage();
 }
 
 function deleteTask(task) {
     // let currentObj = titlesArray.find(item => item.id === currentEl.dataset.id);
-    titlesArray.forEach((item, index) => {
-        if (item.id === task.dataset.id) {
-            titlesArray.splice(index, 1);
-        }
-    });
+    titlesArray = titlesArray.filter(item => item.id !== task.dataset.id);
+    // titlesArray.forEach((item, index) => {
+    //     if (item.id === task.dataset.id) {
+    //         titlesArray.splice(index, 1);
+    //     }
+    // });
     task.remove();
     console.log(titlesArray);
+    sendTaskToStorage();
 }
 
 function renderTask(task, dataId, classItem, classBtn) {
@@ -81,10 +82,56 @@ function toggleCompletedTask(task) {
 
     titlesArray.forEach(item => {
         if (item.id === task.dataset.id) {
-            item.isComleted = !item.isComleted;
+            item.isCompleted = !item.isCompleted;
         }
     });
+    console.log(titlesArray);
+    sendTaskToStorage();
+}
 
+function toggleBtnCompletedTask(buttonNode) {
+    buttonNode.classList.toggle('btn-done-complete');
+}
+
+function deleteAllCompletedTasks() {
+    titlesArray = titlesArray.filter(item => item.isCompleted === false);
+
+    const taskItems = document.querySelectorAll('.task-item');
+    taskItems.forEach(el => {
+        if (el.classList.contains('task-title--done')) {
+            el.remove();
+        }
+    });
+    console.log(titlesArray);
+    sendTaskToStorage();
+}
+
+function sendTaskToStorage() {
+    localStorage.setItem('titles', JSON.stringify(titlesArray));
+    checkEmptyStorage();
+}
+
+function checkEmptyStorage() {
+    let emptyList = document.querySelector('.empty-list__title');   
+    if (localStorage.getItem('titles') == '[]') {
+        emptyList.innerText = 'Вы сделали все дела! Идите спать';
+    } else {
+        emptyList.innerText = 'Список дел';
+    }
+}
+
+function renderTasksFromStorage() {
+    titlesArray = JSON.parse(localStorage.getItem('titles'));
+    titlesArray.forEach(item => {
+        if (item.isCompleted) {
+            renderTask(item.title, item.id, 'task-title--done', 'btn-done-complete');
+            console.log('Completed');
+        } else {
+            renderTask(item.title, item.id);
+            console.log('NotCompleted');
+        }
+    });
     console.log(titlesArray);
 }
 
+renderTasksFromStorage();
