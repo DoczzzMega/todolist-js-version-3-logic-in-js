@@ -122,15 +122,17 @@ function checkEmptyStorage() {
 
 function renderTasksFromStorage() {
     titlesArray = JSON.parse(localStorage.getItem('titles'));
-    titlesArray.forEach(item => {
-        if (item.isCompleted) {
-            renderTask(item.title, item.id, 'task-title--done', 'btn-done-complete');
-            console.log('Completed');
-        } else {
-            renderTask(item.title, item.id);
-            console.log('NotCompleted');
-        }
-    });
+    if (titlesArray.length > 0) {
+        titlesArray.forEach(item => {
+            if (item.isCompleted) {
+                renderTask(item.title, item.id, 'task-title--done', 'btn-done-complete');
+                console.log('Completed');
+            } else {
+                renderTask(item.title, item.id);
+                console.log('NotCompleted');
+            }
+        });
+    }
     console.log(titlesArray);
 }
 
