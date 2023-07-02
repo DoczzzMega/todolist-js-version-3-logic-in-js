@@ -132,6 +132,8 @@ function renderTasksFromStorage() {
                 console.log('NotCompleted');
             }
         });
+    } else {
+        titlesArray = [];
     }
     console.log(titlesArray);
 }
